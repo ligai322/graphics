@@ -1,0 +1,129 @@
+<html>
+<head>
+<script src="leaflet.js"></script>
+<link rel="stylesheet"  href="leaflet.css"/>
+<script src="L.Control.Locate.min.js"></script>
+<link rel="stylesheet"  href="L.Control.Locate.css"/>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>地图</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width"/>
+<style>
+body{
+padding:0px;
+margin:0px;
+}
+#map{
+width:100%;
+height:100%;
+}
+.layerswitch{
+	width:30px;
+	height:30px;
+	right:10px;
+	top:100px;
+	background-color:white;
+	border:1px solid #CCC;
+	border-radius:3px;
+	position:absolute;
+	z-index:9999;
+	cursor:pointer;
+}
+.layerswitch:hover{
+	background-color:#EEE;
+}
+
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="layerswitch" class="layerswitch leaflet-control-layers-toggle" name="vector" onclick="changeTile()"></div>
+<script>
+var map = L.map('map', {
+    center: [30.6, 114.3],
+    zoom: 10
+});
+L.control.locate({flyTo:true}).addTo(map);
+
+var vectorLayers = [];
+var rasterLayers =[];
+
+var layer = L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=673134fd31323e07adb278f87e8c386d', {
+   subdomains:[0,1,2,3,4,5,6,7],
+   maxZoom: 18,
+   minZoom:9,
+   zIndex:1,
+   tileSize: 256,
+   zoomOffset: 0
+});
+vectorLayers.push(layer);
+layer = L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=673134fd31323e07adb278f87e8c386d', {
+   subdomains:[0,1,2,3,4,5,6,7],
+   maxZoom: 18,
+   minZoom:9,
+   zIndex:2,
+   tileSize: 256,
+   zoomOffset: 0
+}).addTo(map );
+vectorLayers.push(layer);
+layer = L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=673134fd31323e07adb278f87e8c386d', {
+   subdomains:[0,1,2,3,4,5,6,7],
+   maxZoom: 18,
+   minZoom:9,
+   zIndex:1,
+   tileSize: 256,
+   zoomOffset: 0
+}).addTo(map );
+rasterLayers.push(layer);
+layer = L.tileLayer('https://t{s}.tianditu.gov.cn/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=673134fd31323e07adb278f87e8c386d', {
+   subdomains:[0,1,2,3,4,5,6,7],
+   maxZoom: 18,
+   minZoom:9,
+   zIndex:2,
+   tileSize: 256,
+   zoomOffset: 0
+}).addTo(map );
+rasterLayers.push(layer);
+
+var marker = null;
+function locationPic(coordinate){
+	if(marker){
+		marker.remove();
+	}
+	marker = L.marker(coordinate).addTo(map);
+}
+
+function removeLocation(){
+	if(marker){
+		marker.remove();
+	}
+}
+
+function changeTile(type){
+	if(layerswitch.name == "vector"){
+		type= "raster";
+		layerswitch.name =  "raster";
+	} else{
+		type= "vector";
+		layerswitch.name =  "vector";
+	}
+	if(type == "vector"){
+		vectorLayers[0].addTo(map);
+		vectorLayers[1].addTo(map);
+		rasterLayers[0].remove();
+		rasterLayers[1].remove();
+	}else if(type=="raster"){
+		rasterLayers[0].addTo(map);
+		rasterLayers[1].addTo(map);
+		vectorLayers[0].remove();
+		vectorLayers[1].remove();
+	}
+}
+changeTile("vector");
+
+/*setInterval(function(){
+	locationPic([30+Math.random(), 114+Math.random()]);
+},5000)*/
+</script>
+</body>
+</html>
