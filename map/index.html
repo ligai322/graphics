@@ -121,9 +121,23 @@ function changeTile(type){
 }
 changeTile("vector");
 
-/*setInterval(function(){
-	locationPic([30+Math.random(), 114+Math.random()]);
-},5000)*/
+function onLocationFound(a){
+	alert(JSON.stringify(a));
+}
+
+function onLocationError(a){
+	alert(JSON.stringify(a));
+}
+
+map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
+
+
+
+function getLocation(callback){
+	 map.locate();
+}
+getLocation();
 </script>
 </body>
 </html>
