@@ -43,7 +43,7 @@ var map = L.map('map', {
     center: [30.6, 114.3],
     zoom: 10
 });
-L.control.locate({flyTo:true}).addTo(map);
+L.control.locate({flyTo:true,locateOptions:{enableHighAccuracy:true}}).addTo(map);
 
 var vectorLayers = [];
 var rasterLayers =[];
@@ -126,6 +126,7 @@ changeTile("vector");
 		if(window.geocensus&&window.geocensus.getLocationCallback){
 			window.geocensus.getLocationCallback(e.latlng.lat,e.latlng.lng,radius);
 		}
+		alert(e.latlng.lat+":"+e.latlng.lng+":"+radius);
 	}
 
 	map.on('locationfound', onLocationFound);
@@ -134,14 +135,15 @@ changeTile("vector");
 		if(window.geocensus&&window.geocensus.getLocationErrorCallback){
 			window.geocensus.getLocationErrorCallback("获取位置失败!");
 		}
+		alert("获取位置失败!");
 	}
 
 	map.on('locationerror', onLocationError);
 	
 	function getLocation(){
-		map.locate({setView: true, maxZoom: 16});
+		map.locate({setView: true, maxZoom: 16,enableHighAccuracy:true});
 	}
-	
+	getLocation();
 </script>
 </body>
 </html>
