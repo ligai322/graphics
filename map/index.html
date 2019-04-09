@@ -121,23 +121,24 @@ function changeTile(type){
 }
 changeTile("vector");
 
-function onLocationFound(a){
-	alert(JSON.stringify(a));
-}
+    function onLocationFound(e) {
+		var radius = e.accuracy / 2;
 
-function onLocationError(a){
-	alert(JSON.stringify(a));
-}
+		L.marker(e.latlng).addTo(map)
+			.bindPopup("You are within " + radius + " meters from this point").openPopup();
 
-//map.on('locationfound', onLocationFound);
-//map.on('locationerror', onLocationError);
+		L.circle(e.latlng, radius).addTo(map);
+	}
 
+	map.on('locationfound', onLocationFound);
+	
+	function onLocationError(e) {
+		alert(e.message);
+	}
 
-
-function getLocation(callback){
-	 map.locate();
-}
-getLocation();
+	map.on('locationerror', onLocationError);
+	
+	map.locate({setView: true, maxZoom: 16});
 </script>
 </body>
 </html>
