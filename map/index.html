@@ -126,7 +126,6 @@ changeTile("vector");
 		if(window.geocensus&&window.geocensus.getLocationCallback){
 			window.geocensus.getLocationCallback(e.latlng.lat,e.latlng.lng,radius);
 		}
-		alert(e.latlng.lat+":"+e.latlng.lng+":"+radius);
 	}
 
 	map.on('locationfound', onLocationFound);
@@ -135,7 +134,6 @@ changeTile("vector");
 		if(window.geocensus&&window.geocensus.getLocationErrorCallback){
 			window.geocensus.getLocationErrorCallback("获取位置失败!");
 		}
-		alert("获取位置失败!");
 	}
 
 	map.on('locationerror', onLocationError);
@@ -143,7 +141,6 @@ changeTile("vector");
 	function getLocation(){
 		map.locate({setView: true, maxZoom: 16,enableHighAccuracy:true});
 	}
-	getLocation();
 </script>
 </body>
 </html>
