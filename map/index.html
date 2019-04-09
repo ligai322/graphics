@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>地图</title>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style>
 body{
 padding:0px;
@@ -123,22 +123,25 @@ changeTile("vector");
 
     function onLocationFound(e) {
 		var radius = e.accuracy / 2;
-
-		L.marker(e.latlng).addTo(map)
-			.bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-		L.circle(e.latlng, radius).addTo(map);
+		if(window.geocensus&&window.geocensus.getLocationCallback){
+			window.geocensus.getLocationCallback(e.latlng.lat,e.latlng.lng,radius);
+		}
 	}
 
 	map.on('locationfound', onLocationFound);
 	
 	function onLocationError(e) {
-		alert(e.message);
+		if(window.geocensus&&window.geocensus.getLocationErrorCallback){
+			window.geocensus.getLocationErrorCallback("获取位置失败!");
+		}
 	}
 
 	map.on('locationerror', onLocationError);
 	
-	map.locate({setView: true, maxZoom: 16});
+	function getLocation(){
+		map.locate({setView: true, maxZoom: 16});
+	}
+	
 </script>
 </body>
 </html>
