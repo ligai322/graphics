@@ -122,7 +122,7 @@ function changeTile(type){
 changeTile("vector");
 	var startLoate = false;
     function onLocationFound(e) {
-		if(startLoate&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
+		if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
 			startLoate = false;
 			var radius = e.accuracy / 2;
 			window.webkit.messageHandlers.locationSuccess.postMessage({lat:e.latlng.lat,lon:e.latlng.lng,radius:radius});
@@ -132,7 +132,7 @@ changeTile("vector");
 	map.on('locationfound', onLocationFound);
 	
 	function onLocationError(e) {
-		if(startLoate&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
+		if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
 			startLoate = false;
 			window.webkit.messageHandlers.locationSuccess.postMessage({lat:-181,lon:-181});
 		}
