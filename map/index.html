@@ -43,7 +43,7 @@ var map = L.map('map', {
     center: [30.6, 114.3],
     zoom: 10
 });
-L.control.locate({flyTo:true,locateOptions:{enableHighAccuracy:true}}).addTo(map);
+var locate = L.control.locate({flyTo:true,locateOptions:{enableHighAccuracy:true}}).addTo(map);
 
 var vectorLayers = [];
 var rasterLayers =[];
@@ -120,27 +120,31 @@ function changeTile(type){
 	}
 }
 changeTile("vector");
-
+	var startLoate = false;
     function onLocationFound(e) {
-		var radius = e.accuracy / 2;
-		if(window.geocensus&&window.geocensus.getLocationCallback){
-			window.geocensus.getLocationCallback(e.latlng.lat,e.latlng.lng,radius);
+		if(startLoate&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
+			startLoate = false;
+			var radius = e.accuracy / 2;
+			window.webkit.messageHandlers.locationSuccess.postMessage({lat:e.latlng.lat,lon:e.latlng.lng,radius:radius});
 		}
 	}
 
 	map.on('locationfound', onLocationFound);
 	
 	function onLocationError(e) {
-		if(window.geocensus&&window.geocensus.getLocationErrorCallback){
-			window.geocensus.getLocationErrorCallback("获取位置失败!");
+		if(startLoate&&window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.locationSuccess){
+			startLoate = false;
+			window.webkit.messageHandlers.locationSuccess.postMessage({lat:-181,lon:-181});
 		}
 	}
 
 	map.on('locationerror', onLocationError);
 	
 	function getLocation(){
+		startLoate = true;
 		map.locate({setView: true, maxZoom: 16,enableHighAccuracy:true});
 	}
+	locate.start();
 </script>
 </body>
 </html>
